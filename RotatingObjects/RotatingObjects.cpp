@@ -9,6 +9,7 @@ const int N = 17;
 const double PI = 3.14159265359;
 constexpr double center = N / 2;
 const char empty_char = ' ';
+const char center_char = '@';
 
 typedef double dd;
 
@@ -29,8 +30,6 @@ struct point {
 vector<vector<vector<point>>> picture;
 
 
-
-
 void init() {
     picture.resize(N);
     for (int i = 0; i < N; i++) {
@@ -39,47 +38,52 @@ void init() {
             picture[i][j].push_back(point(i, j, empty_char));
         }
     }
-    picture[center][center].insert(picture[center][center].begin(), point(center, center, '@', 10));
+    picture[center][center].insert(picture[center][center].begin(), point(center, center, center_char, 10));
 }
 
+void drawOneFigure(const point& point_, vector<vector<vector<point>>>& pic) {
+    if (round(point_.x + center) >= N || round(point_.x + center) < 0 || round(point_.y + center) >= N || round(point_.y + center) < 0) {
+        pic[center][center].push_back(point(point_.x + center, point_.y + center, point_.model, -1));
+    }
+    else {
+        pic[round(point_.x + center)][round(point_.y + center)].push_back(point(point_.x + center, point_.y + center, point_.model, 5));
+    }
+}
 void draw() {
-   int x = 7 + center;
-    int y = 0 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 5 + center;
-    y = 0 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 6 + center;
-    y = 0 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 4 + center;
-    y = 0 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 3 + center;
-    y = 0 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 2 + center;
-    y = 0 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 1 + center;
-    y = 0 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 7 + center;
-    y = -1 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 7 + center;
-    y = -2 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 7 + center;
-    y = -3 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    x = 7 + center;
-    y = -4 + center;
-    picture[x][y].insert(picture[x][y].begin(), point(x, y, '#', 5));
-    
-    
-    
-    
+   int x = 7;
+    int y = 0;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 5;
+    y = 0;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 6;
+    y = 0;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 4;
+    y = 0;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 3;
+    y = 0;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 2;
+    y = 0;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 1;
+    y = 0;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 7;
+    y = -1;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 7;
+    y = -2;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 7;
+    y = -3;
+    drawOneFigure(point(x, y, '#', 5), picture);
+    x = 7;
+    y = -4;
+    drawOneFigure(point(x, y, '#', 5), picture);
+
 }
 
 void print() {
@@ -107,16 +111,16 @@ void rotate(double angle) {
             newPicture[i][j].push_back(point(i, j, empty_char));
         }
     }
-    newPicture[center][center].push_back(point(center, center, '@', 10));
+    newPicture[center][center].push_back(point(center, center, center_char, 10));
     angle = angle / 180. * PI;
     for (int i = N - 1; i >= 0; i--) {
         for (int j = 0; j < N; j++) {
             for (int k = 0; k < picture[j][i].size(); k++) {
-                if (picture[j][i][k].model != empty_char && picture[j][i][k].model != '@') {
+                if (picture[j][i][k].model != empty_char && picture[j][i][k].model != center_char) {
                     dd X = picture[j][i][k].x - center, Y = picture[j][i][k].y - center;
                     dd newX = X * cos(angle) + Y * sin(angle);
                     dd newY = -X * sin(angle) + Y * cos(angle);
-                    newPicture[round(newX + center)][round(newY + center)].push_back(point(newX + center,newY + center, picture[j][i][k].model, 5));
+                    drawOneFigure(point(newX, newY, picture[j][i][k].model, 5), newPicture);
                 }
             }
         }
